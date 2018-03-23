@@ -4,6 +4,7 @@
 
 part of graphql_client_generator.parser;
 
+/// Generates code for GraphQL Operation.
 class GQLOperationGenerator extends Object
     with SelectionSet
     implements Generable {
@@ -11,6 +12,7 @@ class GQLOperationGenerator extends Object
   final Map<String, GQLFragmentGenerator> _fragmentsMap;
   final GQLSettings _settings;
 
+  /// Constructor.
   GQLOperationGenerator(
       this._operationContext, this._fragmentsMap, this._settings);
 
@@ -23,8 +25,10 @@ class GQLOperationGenerator extends Object
   @override
   Map<String, GQLFragmentGenerator> get fragmentsMap => _fragmentsMap;
 
+  /// Name of the operation.
   String get name => _operationContext.name;
 
+  /// Gets the type of the operation.
   String get type {
     if (_operationContext.isQuery) {
       return 'query';
@@ -35,13 +39,16 @@ class GQLOperationGenerator extends Object
     throw new StateError('Unknow Opration Type');
   }
 
+  /// Gets the operation arguments.
   String get arguments => _operationContext.variableDefinitions != null
       ? _operationContext.variableDefinitions.toSource()
       : '';
 
+  /// Gets the operation.
   String get operationName =>
       '${name[0].toUpperCase()}${name.substring(1)}${type[0].toUpperCase()}${type.substring(1)}';
 
+  /// Gets the type of the operation.
   String get operationType {
     if (_operationContext.isQuery) {
       return 'queryType';
@@ -53,9 +60,9 @@ class GQLOperationGenerator extends Object
   }
 
   List<Reference> get mixin => [
-        isNotEmpty ? const Reference('Fields') : null,
-        arguments.isNotEmpty ? const Reference('Arguments') : null,
-      ].where((r) => r != null).toList();
+    isNotEmpty ? const Reference('Fields') : null,
+    arguments.isNotEmpty ? const Reference('Arguments') : null,
+  ].where((r) => r != null).toList();
 
   List<Method> get methods {
     final operationFieldsNames = fields.map((f) => f.name);
@@ -72,26 +79,23 @@ class GQLOperationGenerator extends Object
         ..type = MethodType.getter
         ..lambda = true
         ..returns = const Reference('String')
-        ..body = new Code((b) => b..code = "$operationType")
-        ..annotations.add(new Annotation(
-            (b) => b..code = new Code((b) => b..code = 'override')))),
+        ..body = new Code('$operationType')
+        ..annotations.add(const CodeExpression(const Code('override')))),
       new Method((b) => b
         ..name = 'gqlName'
         ..type = MethodType.getter
         ..lambda = true
         ..returns = const Reference('String')
-        ..body = new Code((b) => b..code = "'$name'")
-        ..annotations.add(new Annotation(
-            (b) => b..code = new Code((b) => b..code = 'override')))),
+        ..body = new Code("'$name'")
+        ..annotations.add(const CodeExpression(const Code('override')))),
       arguments.isNotEmpty
           ? new Method((b) => b
             ..name = 'gqlArguments'
             ..type = MethodType.getter
             ..lambda = true
             ..returns = const Reference('String')
-            ..body = new Code((b) => b..code = "r'$arguments'")
-            ..annotations.add(new Annotation(
-                (b) => b..code = new Code((b) => b..code = 'override'))))
+            ..body = new Code("r'$arguments'")
+            ..annotations.add(const CodeExpression(const Code('override'))))
           : null,
       isNotEmpty
           ? new Method((b) => b
@@ -99,28 +103,26 @@ class GQLOperationGenerator extends Object
             ..type = MethodType.getter
             ..lambda = true
             ..returns = const Reference('List<GQLField>')
-            ..body = new Code((b) => b..code = "[$operationFieldsDeclarations]")
-            ..annotations.add(new Annotation(
-                (b) => b..code = new Code((b) => b..code = 'override'))))
+            ..body = new Code('[$operationFieldsDeclarations]')
+            ..annotations.add(const CodeExpression(const Code('override'))))
           : null,
       new Method((b) => b
         ..name = 'gqlClone'
         ..returns = new Reference(operationName)
         ..lambda = true
-        ..body = new Code((b) => b..code = cloneMethodFields)
-        ..annotations.add(new Annotation(
-            (b) => b..code = new Code((b) => b..code = 'override')))),
+        ..body = new Code(cloneMethodFields)
+        ..annotations.add(const CodeExpression(const Code('override')))),
     ].where((m) => m != null).toList();
   }
 
   @override
   List<Spec> generate() => [
-        new Class((b) => b
-          ..name = operationName
-          ..extend = const Reference('Object')
-          ..mixins.addAll(mixin)
-          ..implements.add(const Reference('GQLOperation'))
-          ..methods.addAll(methods)
-          ..fields.addAll(fields))
-      ]..addAll(parseSelections(fieldsGenerators, []));
+    new Class((b) => b
+      ..name = operationName
+      ..extend = const Reference('Object')
+      ..mixins.addAll(mixin)
+      ..implements.add(const Reference('GQLOperation'))
+      ..methods.addAll(methods)
+      ..fields.addAll(fields))
+  ]..addAll(parseSelections(fieldsGenerators, []));
 }

@@ -29,6 +29,11 @@ class Operation implements Node {
   @override
   List<Fragment> fragments;
 
+  List<Reference> get mixin => [
+    isNotEmpty ? const Reference('Fields') : null,
+    arguments.isNotEmpty ? const Reference('Arguments') : null,
+  ].where((r) => r != null).toList();
+
   Operation(this._ctx)
       : parent = null,
         children = [],
@@ -46,6 +51,9 @@ class Operation implements Node {
     throw new StateError('Unknow Opration Type');
   }
 
+  String get classType => '${typeToString[0].toUpperCase()}${typeToString.substring(1)}';
+  String get className => '${name[0].toUpperCase()}${name.substring(1)}$classType';
+
   String get typeToString => renderOperationType(type);
 
   String get arguments => _ctx.variableDefinitions != null
@@ -53,4 +61,6 @@ class Operation implements Node {
       : '';
 
   String get directives => _ctx.directives.map((d) => d.toSource()).join(', ');
+
+  bool get isNotEmpty => _ctx.selectionSet != null && _ctx.selectionSet.selections.isNotEmpty;
 }

@@ -13,8 +13,10 @@ class Renderer {
   final DartEmitter _emitter;
   final DartFormatter _formatter;
 
+  /// Renders the new code that has been generated?
   Renderer(this._emitter, this._formatter);
 
+  /// Generates a header for the generated code.
   String renderHeader(AssetId outputId) {
     final package = outputId.package;
     final name = basename(outputId.path);
@@ -39,14 +41,13 @@ class Renderer {
     ''';
   }
 
-  void renderLibrary(FileBuilder f, List<Spec> gqlDefinitions) {
-    f.directives
-        .add(new Directive.import('package:graphql_client/graphql_dsl.dart'));
-    f.body.addAll(gqlDefinitions);
-  }
-
+  /// Builds the code?
   String buildLibrary({AssetId outputId, List<Spec> gqlDefinitions}) {
-    final library = new File((b) => renderLibrary(b, gqlDefinitions));
+    final library = new Library((b) {
+      b.directives.add(
+        new Directive.import('package:graphql_client/graphql_dsl.dart'));
+      b.body.addAll(gqlDefinitions);
+    });
 
     return _formatter.format('''
     ${renderHeader(outputId)}

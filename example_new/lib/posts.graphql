@@ -1,0 +1,11 @@
+query Posts {
+  postsTest {
+    id,
+    title,
+    content,
+    author {
+      id,
+      name
+    }
+  }
+}

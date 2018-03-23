@@ -41,9 +41,8 @@ class GQLFragmentGenerator extends Object
           ..type = MethodType.getter
           ..lambda = true
           ..returns = const Reference('String')
-          ..body = new Code((b) => b..code = "'$type'")
-          ..annotations.add(new Annotation(
-              (b) => b..code = new Code((b) => b..code = 'override')))),
+          ..body = new Code("'$type'")
+          ..annotations.add(const CodeExpression(const Code('override')))),
       ].toList();
 
   @override

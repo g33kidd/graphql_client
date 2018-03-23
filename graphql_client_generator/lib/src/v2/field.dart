@@ -27,11 +27,17 @@ class GQLField implements Node {
 
   String get arguments {
     final innerValue = _ctx.arguments.map((a) => a.toSource()).join(', ');
-
     return innerValue.isNotEmpty ? '($innerValue)' : '';
   }
 
   String get directives => _ctx.directives.map((d) => d.toSource()).join(', ');
+  String get resolverName => '${name[0].toUpperCase()}${name.substring(1)}Resolver';
+
+  FieldContext get fieldContext => _ctx;
+  GeneratorSettings get generatorSettings => _settings;
+
+  bool get isCollectionField => _settings.collectionFields.contains(name);
+  bool get isCollectionResolver => isNotEmpty && isCollectionField;
 
   bool get isList => _settings.collectionFields.contains(name);
   bool get isNonNull => !_settings.collectionFields.contains(name);

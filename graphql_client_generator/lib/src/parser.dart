@@ -35,7 +35,11 @@ class GQLParser {
 
   List<Spec> parse(String gql) {
     final visitor = new GQLVisitor(
-        new GeneratorSettings(collectionFields: _settings.collectionFields));
+      new GeneratorSettings(
+        collectionFields: _settings.collectionFields
+      )
+    );
+    
     final generator = new GQLGenerator(visitor);
 
     return generator.generate(gql);

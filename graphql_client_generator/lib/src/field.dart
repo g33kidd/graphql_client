@@ -77,18 +77,16 @@ class GQLFieldGenerator extends Object with SelectionSet implements Generable {
         ..type = MethodType.getter
         ..lambda = true
         ..returns = const Reference('String')
-        ..body = new Code((b) => b..code = "'$name'")
-        ..annotations.add(new Annotation(
-            (b) => b..code = new Code((b) => b..code = 'override')))),
+        ..body = new Code("'$name'")
+        ..annotations.add(const CodeExpression(const Code('override')))),
       arguments.isNotEmpty
           ? new Method((b) => b
             ..name = 'gqlArguments'
             ..type = MethodType.getter
             ..lambda = true
             ..returns = const Reference('String')
-            ..body = new Code((b) => b..code = "r'$arguments'")
-            ..annotations.add(new Annotation(
-                (b) => b..code = new Code((b) => b..code = 'override'))))
+            ..body = new Code("r'$arguments'")
+            ..annotations.add(const CodeExpression(const Code('override'))))
           : null,
       directives.isNotEmpty
           ? new Method((b) => b
@@ -96,9 +94,8 @@ class GQLFieldGenerator extends Object with SelectionSet implements Generable {
             ..type = MethodType.getter
             ..lambda = true
             ..returns = const Reference('String')
-            ..body = new Code((b) => b..code = "'$directives'")
-            ..annotations.add(new Annotation(
-                (b) => b..code = new Code((b) => b..code = 'override'))))
+            ..body = new Code("'$directives'")
+            ..annotations.add(const CodeExpression(const Code('override'))))
           : null,
       isNotEmpty
           ? new Method((b) => b
@@ -106,27 +103,24 @@ class GQLFieldGenerator extends Object with SelectionSet implements Generable {
             ..type = MethodType.getter
             ..lambda = true
             ..returns = const Reference('List<GQLField>')
-            ..body = new Code((b) => b..code = "[$resolverFieldsDeclarations]")
-            ..annotations.add(new Annotation(
-                (b) => b..code = new Code((b) => b..code = 'override'))))
+            ..body = new Code('[$resolverFieldsDeclarations]')
+            ..annotations.add(const CodeExpression(const Code('override'))))
           : null,
       fragmentSpreads.isNotEmpty
           ? new Method((b) => b
             ..name = 'gqlFragments'
             ..type = MethodType.getter
             ..lambda = true
-            ..body = new Code((b) => b..code = "[$fragmentFieldsDeclarations]")
+            ..body = new Code('[$fragmentFieldsDeclarations]')
             ..returns = const Reference('List<GQLFragment>')
-            ..annotations.add(new Annotation(
-                (b) => b..code = new Code((b) => b..code = 'override'))))
+            ..annotations.add(const CodeExpression(const Code('override'))))
           : null,
       new Method((b) => b
         ..name = 'gqlClone'
         ..returns = new Reference(resolverName)
         ..lambda = true
-        ..body = new Code((b) => b..code = cloneMethodFields)
-        ..annotations.add(new Annotation(
-            (b) => b..code = new Code((b) => b..code = 'override')))),
+        ..body = new Code(cloneMethodFields)
+        ..annotations.add(const CodeExpression(const Code('override')))),
     ].where((m) => m != null).toList();
   }
 
@@ -163,7 +157,7 @@ class GQLFieldGenerator extends Object with SelectionSet implements Generable {
 
     return [
       new Constructor(
-          (b) => b..body = new Code((b) => b.code = constructorCode)),
+          (b) => b..body = new Code(constructorCode)),
     ];
   }
 

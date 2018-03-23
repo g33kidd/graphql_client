@@ -61,7 +61,7 @@ abstract class SelectionSet implements Generable {
         .map((s) => new Field((b) => b
           ..name = s.alias ?? s.name
           ..type = new Reference(s.resolverName)
-          ..assignment = new Code((b) => b..code = 'new ${s.resolverName}()')))
+          ..assignment = new Code('new ${s.resolverName}()')))
         .toList())
     ..addAll(getNestedFragments(this)
         .expand((f) => f.fieldsGenerators.map((field) => new Field((b) => b
@@ -72,7 +72,7 @@ abstract class SelectionSet implements Generable {
         .map((f) => new Field((b) => b
           ..name = '_${f.assignmentName}'
           ..type = new Reference(f.fragmentName)
-          ..assignment = new Code((b) => b..code = 'new ${f.fragmentName}()')))
+          ..assignment = new Code('new ${f.fragmentName}()')))
         .toList())
     ..addAll(getNestedFragments(this)
         .where((f) => !fragmentSpreads.contains(f))

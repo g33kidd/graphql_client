@@ -1,0 +1,25 @@
+query FetchUserInfo($avatarSize: Int) {
+  viewerTest {
+    login @include(if: false)
+    bio
+    location
+    avatarUrl(size: $avatarSize)
+  }
+}
+
+query Users {
+  viewerTest {
+    login,
+    bio,
+    location,
+    avatarUrl
+  }
+}
+
+query User($userId: Int) {
+  user: fetchUser(userId: $userId) {
+    id,
+    username,
+    email
+  }
+}
