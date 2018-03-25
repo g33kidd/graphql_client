@@ -1,11 +1,17 @@
+fragment PostFragment on Post {
+  id,
+  title,
+  content
+}
+
+mutation AddPost($title: String, $body: String) {
+  post: addPost(title: $title, body: $body) {
+    ...PostFragment
+  }
+}
+
 query Posts {
-  postsTest {
-    id,
-    title,
-    content,
-    author {
-      id,
-      name
-    }
+  posts {
+    ...PostFragment
   }
 }

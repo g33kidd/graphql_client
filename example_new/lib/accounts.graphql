@@ -1,5 +1,13 @@
+mutation AddUser($name: String) {
+  user: addUser(name: $name) {
+    id,
+    username,
+    email
+  }
+}
+
 query FetchUserInfo($avatarSize: Int) {
-  viewerTest {
+  viewer {
     login @include(if: false)
     bio
     location
@@ -8,7 +16,7 @@ query FetchUserInfo($avatarSize: Int) {
 }
 
 query Users {
-  viewerTest {
+  viewer {
     login,
     bio,
     location,
